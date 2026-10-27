@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChurnSense — Customer Churn Predictor | AI/ML Project by Vikranth Reddy</title>
+<meta name="description" content="ChurnSense predicts whether a telecom customer is likely to churn, from tenure, monthly charges, contract type and support history, using logistic regression. Try the interactive browser demo.">
+<meta property="og:title" content="ChurnSense — Customer Churn Predictor">
+<meta property="og:description" content="Logistic regression predicts customer churn risk in seconds. Try the interactive demo.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://churnsense.vercel.app/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ChurnSense — Customer Churn Predictor">
+<meta name="twitter:description" content="Logistic regression predicts customer churn risk in seconds.">
+<link rel="canonical" href="https://churnsense.vercel.app/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"ChurnSense","applicationCategory":"AI/ML demo","author":{"@type":"Person","name":"Vikranth Reddy"},"description":"Customer churn predictor using logistic regression."}
+</script>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff;max-width:760px;margin:0 auto;padding:24px;line-height:1.5}
+h1{font-size:2em;margin-bottom:0}.sub{color:#333;margin-top:4px}
+label{display:block;margin:14px 0 2px;font-weight:bold}
+input,select{width:100%;padding:8px;font-size:16px;border:1px solid #000;border-radius:4px;box-sizing:border-box}
+button{margin-top:18px;padding:12px 24px;font-size:17px;background:#000;color:#fff;border:0;border-radius:4px;cursor:pointer}
+button.preset{background:#fff;color:#000;border:1px solid #000;margin-right:8px}
+#out{margin-top:22px;padding:18px;border:2px solid #000;border-radius:6px;font-size:1.3em}
+small{color:#333}.row{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.bar{height:18px;background:#eee;border:1px solid #000;margin-top:10px}#fill{height:100%;background:#000;width:0%}
+</style>
+</head>
+<body>
+<h1>ChurnSense</h1>
+<p class="sub">Customer Churn Predictor — logistic regression, trained on 800 synthetic telecom customers. All prediction happens in your browser; no data leaves this page.</p>
+<div class="row">
+<div><label>Tenure (months)</label><input id="tenure" type="number" min="0" max="72" value="12"></div>
+<div><label>Monthly charges ($)</label><input id="monthly" type="number" min="20" max="120" value="85"></div>
+<div><label>Contract</label><select id="contract"><option value="0" selected>Month-to-month</option><option value="1">One year</option><option value="2">Two years</option></select></div>
+<div><label>Internet service</label><select id="fiber"><option value="0" selected>DSL / none</option><option value="1">Fiber optic</option></select></div>
+<div><label>Support calls (last year)</label><input id="calls" type="number" min="0" max="10" value="4"></div>
+<div><label>Paperless billing</label><select id="paperless"><option value="0">No</option><option value="1" selected>Yes</option></select></div>
+<div><label>Senior citizen</label><select id="senior"><option value="0" selected>No</option><option value="1">Yes</option></select></div>
+</div>
+<button onclick="predict()">Predict churn risk</button>
+<div>
+<button class="preset" onclick="preset(6,95,0,1,5,1,0)">At-risk new customer</button>
+<button class="preset" onclick="preset(48,45,2,0,0,0,0)">Loyal long-term customer</button>
+<button class="preset" onclick="preset(2,110,0,1,8,1,1)">High-risk customer</button>
+</div>
+<div id="out">Enter the customer details and press Predict churn risk.</div>
+<div class="bar"><div id="fill"></div></div>
+<p><small>Model: 5-fold cross-validated accuracy = 73.5%, AUC = 0.82 (guessing the majority class: 50.6% — about 1.45&times; better). Risk above 50% is flagged as likely to churn. Trained on synthetic data for learning purposes; real churn also depends on service quality, offers and competitors.</small></p>
+<p><small>By Vikranth Reddy — B.Tech CSE (AI &amp; ML), Woxsen University. <a href="https://github.com/HVRGAMING2705/churnsense">GitHub repo</a></small></p>
+<script>
+const MEANS=[35.59682745916817,70.53556640707917,1.0025,0.45375,5.15375,0.4725,0.49];
+const STDS=[20.90303999883846,29.07636815437386,0.8170029069715756,0.49785634223137315,3.126117550173054,0.49924317721927686,0.49989998999799923];
+const COEF=[-0.6684247890908498,0.628891362451327,-0.7278277960182096,0.28944803915208456,0.953001511018113,0.22818636183002847,0.2703166887035208];
+const INTERCEPT=0.02223649645480377;
+function modelProb(v){let s=INTERCEPT;for(let i=0;i<7;i++)s+=COEF[i]*((v[i]-MEANS[i])/STDS[i]);return 1/(1+Math.exp(-s));}
+function predict(){const v=[+document.getElementById('tenure').value,+document.getElementById('monthly').value,+document.getElementById('contract').value,+document.getElementById('fiber').value,+document.getElementById('calls').value,+document.getElementById('paperless').value,+document.getElementById('senior').value];
+const p=modelProb(v);const verdict=p>=0.5?'Likely to churn — act now':'Likely to stay';
+document.getElementById('out').innerHTML='Churn risk: <b>'+(p*100).toFixed(1)+'%</b> — '+verdict;
+document.getElementById('fill').style.width=(p*100)+'%';}
+function preset(a,b,c,d,e,f,g){document.getElementById('tenure').value=a;document.getElementById('monthly').value=b;document.getElementById('contract').value=c;document.getElementById('fiber').value=d;document.getElementById('calls').value=e;document.getElementById('paperless').value=f;document.getElementById('senior').value=g;predict();}
+</script>
+</body>
+</html>
