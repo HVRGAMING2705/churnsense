@@ -9,6 +9,6 @@ paperless billing, senior-citizen status.
 - `index.html` is a single-page demo: the same coefficients run in JavaScript,
   so the browser demo reproduces the Python model exactly — no backend needed.
 
-Live demo: https://churnsense.vercel.app
+Live demo: https://churnsense-peach.vercel.app
 
 By Vikranth Reddy — B.Tech CSE (AI & ML), Woxsen University.
