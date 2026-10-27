@@ -29,7 +29,7 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://churnsense.vercel.app"
+          "value": "https://churnsense-peach.vercel.app"
         },
         {
           "key": "Content-Security-Policy",
